@@ -1,0 +1,27 @@
+@media print {
+    /*assing div_print_class to every div you want to print on single separate A4 page*/
+    div .div_print_class {
+        z-index: 100 !important;
+        visibility: visible !important;
+        position: relative !important;
+        display: block !important;
+        background-color: lightgray !important;
+        height: 297mm !important;
+        width: 211mm !important;
+        position: relative !important;
+        padding: 0px;
+        top: 0 !important;
+        left: 0 !important;
+        margin: 0 !important;
+        orphans: 0 !important;
+        widows: 0 !important;
+        overflow: visible !important;
+        page-break-after: always;
+    }
+
+    @page {
+        size: A4;
+        margin: 20mm;
+        orphans: 0 !important;
+        widows: 0 !important;
+    }

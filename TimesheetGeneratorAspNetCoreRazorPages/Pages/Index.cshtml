@@ -1,0 +1,93 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+@{ string[] frequencies = { "Weekly", "Monthly" }; }
+
+<div class="row">
+    <div class="col-sm-4">
+        <h2>Timesheet Generator</h2>
+        <form asp-page-handler="generate" role="form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label" asp-for="CandidateName"></label>
+                <input class="form-control" type="text" asp-for="CandidateName" placeholder="">
+                <span asp-validation-for="CandidateName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="ClientName"></label>
+                <input class="form-control" type="text" asp-for="ClientName" placeholder="">
+                <span asp-validation-for="ClientName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="JobTitle"></label>
+                <input class="form-control" type="text" asp-for="JobTitle" placeholder="">
+                <span asp-validation-for="JobTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="PlacementStartDate"></label>
+                <input class="form-control" type="text" asp-for="PlacementStartDate" placeholder="">
+                <span asp-validation-for="PlacementStartDate" class="text-danger"></span>
+                <span asp-validation-for="PlacementStartDateErrorMessage" class="text-danger"></span>
+                @if (Model != null && Model.Validated && !string.IsNullOrEmpty(Model.PlacementStartDateErrorMessage))
+                {
+                    <span><label class="text-danger">@Model.PlacementStartDateErrorMessage</label></span>
+                }
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="PlacementEndDate"></label>
+                <input class="form-control" type="text" asp-for="PlacementEndDate" placeholder="">
+                <span asp-validation-for="PlacementEndDate" class="text-danger"></span>
+                @if (Model != null && Model.Validated && !string.IsNullOrEmpty(Model.PlacementEndDateErrorMessage))
+                {
+                    <span><label class="text-danger">@Model.PlacementEndDateErrorMessage</label></span>
+                }
+            </div>
+            <div class="form-group">
+                <label asp-for="PlacementType"></label>
+                <select class="form-control" asp-for="PlacementType">
+                    @foreach (string frequency in frequencies)
+                    {
+                        <option>@frequency</option>
+                    }
+                </select>
+                <span asp-validation-for="PlacementType" class="text-danger"></span>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" type="submit">Generate</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-sm-8">
+        @if (Model != null && Model.Validated)
+        {
+            <div id="div_print" class="div_print_class">
+                <h2>Timesheets</h2>
+                <p>
+                    @Html.Raw(Model.GetHeaderRow())
+                </p>
+                <p>
+                    @Html.Raw(Model.GetDateRangeRow())
+                </p>
+            </div>
+            <div class="btn-group">
+                <input class="btn btn-primary" type="submit" value="Print" onClick="printdiv('div_print');" />
+            </div>
+        }
+    </div>
+</div>
+<script language="javascript">
+    function printdiv(printpage) {
+        var headstr = "<html><head><title>Timesheets-@DateTime.Today.Year-@DateTime.Today.Month-@DateTime.Today.Hour-@DateTime.Today.Minute-@DateTime.Today.Minute-@DateTime.Today.Second</title></head><body>";
+        var footstr = "</body>";
+        var newstr = document.all.item(printpage).innerHTML;
+        var oldstr = document.body.innerHTML;
+        document.body.innerHTML = headstr + newstr + footstr;
+        window.print();
+        document.body.innerHTML = oldstr;
+        return false;
+    }
+</script>
+
